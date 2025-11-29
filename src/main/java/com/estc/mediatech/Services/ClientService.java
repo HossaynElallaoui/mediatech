@@ -1,4 +1,4 @@
-package Services;
+package com.estc.mediatech.Services;
 
 import com.estc.mediatech.models.ClientEntity;
 import java.util.List;

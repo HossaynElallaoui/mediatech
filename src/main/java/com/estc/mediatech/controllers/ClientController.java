@@ -1,8 +1,7 @@
 package com.estc.mediatech.controllers;
 
+import com.estc.mediatech.Services.ClientService;
 import com.estc.mediatech.models.ClientEntity;
-
-import Services.ClientService;
 
 import org.springframework.web.bind.annotation.*;
 
