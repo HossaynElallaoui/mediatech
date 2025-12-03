@@ -1,0 +1,101 @@
+<div class="dashboard-container">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">
+                <h2>MediaTech</h2>
+            </div>
+            <div class="nav-actions">
+                <span class="welcome-text">Welcome, <strong>{{ username }}</strong></span>
+                <button class="btn-logout" (click)="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="hero-section">
+            <h1 class="hero-title">Dashboard</h1>
+            <p class="hero-subtitle">Manage your media content and analytics</p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card card-purple">
+                <div class="card-icon">📊</div>
+                <h3>Analytics</h3>
+                <p class="card-number">1,234</p>
+                <p class="card-label">Total Views</p>
+            </div>
+
+            <div class="card card-blue">
+                <div class="card-icon">👥</div>
+                <h3>Clients</h3>
+                <p class="card-number">567</p>
+                <p class="card-label">Active Users</p>
+            </div>
+
+            <div class="card card-pink">
+                <div class="card-icon">📁</div>
+                <h3>Products</h3>
+                <p class="card-number">89</p>
+                <p class="card-label">Total Items</p>
+            </div>
+
+            <div class="card card-orange">
+                <div class="card-icon">💰</div>
+                <h3>Revenue</h3>
+                <p class="card-number">$12,345</p>
+                <p class="card-label">This Month</p>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <div class="feature-card">
+                <h3>Quick Actions</h3>
+                <ul class="action-list">
+                    <li class="action-item">
+                        <span class="action-icon">➕</span>
+                        <span>Add New Client</span>
+                    </li>
+                    <li class="action-item">
+                        <span class="action-icon">📄</span>
+                        <span>Create Invoice</span>
+                    </li>
+                    <li class="action-item">
+                        <span class="action-icon">📦</span>
+                        <span>Add Product</span>
+                    </li>
+                    <li class="action-item">
+                        <span class="action-icon">📈</span>
+                        <span>View Reports</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Recent Activity</h3>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div>
+                            <p class="activity-text">New client registered</p>
+                            <p class="activity-time">5 minutes ago</p>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div>
+                            <p class="activity-text">Invoice #1234 paid</p>
+                            <p class="activity-time">1 hour ago</p>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div>
+                            <p class="activity-text">Product added to catalog</p>
+                            <p class="activity-time">3 hours ago</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
