@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +13,6 @@ import java.util.Date;
 @Component
 public class JwtGenerator {
 
-    // Fixed secret key - DO NOT change this in production without invalidating all
-    // tokens
     private static final String JWT_SECRET = "MediaTechSecretKeyForJWTTokenGenerationAndValidationPleaseKeepThisSafeAndSecure2024";
     private static final Key key = Keys.hmacShaKeyFor(JWT_SECRET.getBytes());
     private static final long JWT_EXPIRATION = 7200000; // 2 hours
@@ -25,15 +22,12 @@ public class JwtGenerator {
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + JWT_EXPIRATION);
 
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(currentDate)
                 .setExpiration(expireDate)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
-
-        System.out.println("Generated JWT token for user: " + username);
-        return token;
     }
 
     public String getUsernameFromJWT(String token) {
@@ -53,8 +47,7 @@ public class JwtGenerator {
                     .parseClaimsJws(token);
             return true;
         } catch (Exception ex) {
-            System.out.println("JWT validation failed: " + ex.getMessage());
-            throw new AuthenticationCredentialsNotFoundException("JWT was expired or incorrect");
+            return false;
         }
     }
 }

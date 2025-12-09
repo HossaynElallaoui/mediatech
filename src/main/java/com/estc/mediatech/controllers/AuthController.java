@@ -60,7 +60,7 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtGenerator.generateToken(authentication);
             System.out.println("Login successful for: " + loginDto.getUsername());
-            return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
+            return new ResponseEntity<AuthResponseDto>(new AuthResponseDto(token), HttpStatus.OK);
         } catch (BadCredentialsException e) {
             System.out.println("Bad credentials for user: " + loginDto.getUsername());
             return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);

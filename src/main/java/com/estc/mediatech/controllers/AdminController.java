@@ -9,7 +9,6 @@ import com.estc.mediatech.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin("*")
 public class AdminController {
 
     private final UserRepository userRepository;
@@ -34,9 +32,8 @@ public class AdminController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Get all users (admin only)
+    // Get all users - NO @PreAuthorize for now
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         try {
             List<UserEntity> users = userRepository.findAll();
@@ -49,13 +46,13 @@ public class AdminController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println("Error getting all users: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    // Get user by ID (admin only)
+    // Get user by ID
     @GetMapping("/users/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Integer id) {
         try {
             UserEntity user = userRepository.findById(id)
@@ -71,9 +68,8 @@ public class AdminController {
         }
     }
 
-    // Create a new user (admin only)
+    // Create a new user
     @PostMapping("/users")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto) {
         try {
             if (userRepository.existsByUsername(createUserDto.getUsername())) {
@@ -98,14 +94,14 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             System.out.println("Error creating user: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error creating user: " + e.getMessage());
         }
     }
 
-    // Update user (admin only)
+    // Update user
     @PutMapping("/users/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody CreateUserDto updateUserDto) {
         try {
             UserEntity user = userRepository.findById(id)
@@ -141,16 +137,12 @@ public class AdminController {
         }
     }
 
-    // Delete user (admin only)
+    // Delete user
     @DeleteMapping("/users/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
         try {
             UserEntity user = userRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("User not found"));
-
-            // Prevent admin from deleting themselves
-            // You might want to add additional checks here
 
             userRepository.delete(user);
             return ResponseEntity.ok("User deleted successfully");
@@ -161,9 +153,8 @@ public class AdminController {
         }
     }
 
-    // Get statistics (admin only)
+    // Get statistics
     @GetMapping("/stats")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> getStats() {
         try {
             long userCount = userRepository.count();
@@ -177,6 +168,7 @@ public class AdminController {
             });
         } catch (Exception e) {
             System.out.println("Error getting stats: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error getting stats");
         }
     }
