@@ -21,13 +21,13 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
-    public ProduitEntity update(int id, ProduitEntity produitData) {
+    public ProduitEntity update(int id, ProduitEntity ProduitEntity) {
         ProduitEntity produit = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produit not found"));
 
-        produit.setNom(produitData.getNom());
-        produit.setPrix(produitData.getPrix());
-        produit.setDescription(produitData.getDescription());
+        produit.setNom(ProduitEntity.getNom());
+        produit.setPrix(ProduitEntity.getPrix());
+        produit.setDescription(ProduitEntity.getDescription());
 
         return repo.save(produit);
     }

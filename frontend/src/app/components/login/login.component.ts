@@ -23,16 +23,27 @@ export class LoginComponent {
     ) { }
 
     onSubmit(): void {
+        if (!this.credentials.username || !this.credentials.password) {
+            this.errorMessage = 'Please enter both username and password';
+            return;
+        }
+
         this.isLoading = true;
         this.errorMessage = '';
 
         this.authService.login(this.credentials).subscribe({
             next: () => {
                 localStorage.setItem('username', this.credentials.username);
-                this.router.navigate(['/dashboard']);
+                // Navigate to admin dashboard if admin, else regular dashboard
+                if (this.credentials.username === 'admin') {
+                    this.router.navigate(['/admin']);
+                } else {
+                    this.router.navigate(['/dashboard']);
+                }
             },
             error: (error) => {
-                this.errorMessage = 'Invalid username or password';
+                console.error('Login error:', error);
+                this.errorMessage = error.error || 'Invalid username or password';
                 this.isLoading = false;
             },
             complete: () => {

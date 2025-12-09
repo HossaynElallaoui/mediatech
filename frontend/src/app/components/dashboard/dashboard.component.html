@@ -1,100 +1,60 @@
 <div class="dashboard-container">
     <nav class="navbar">
         <div class="navbar-content">
-            <div class="logo">
-                <h2>MediaTech</h2>
-            </div>
-            <div class="nav-actions">
-                <span class="welcome-text">Welcome, <strong>{{ username }}</strong></span>
-                <button class="btn-logout" (click)="logout()">Logout</button>
+            <h1 class="logo">MediaTech</h1>
+            <div class="navbar-actions">
+                <span class="welcome">Welcome, <strong>{{ username }}</strong></span>
+                <button class="btn btn-secondary btn-sm" (click)="goToAdmin()" *ngIf="username === 'admin'">
+                    Admin Panel
+                </button>
+                <button class="btn btn-secondary btn-sm" (click)="logout()">
+                    Logout
+                </button>
             </div>
         </div>
     </nav>
 
-    <div class="main-content">
-        <div class="hero-section">
-            <h1 class="hero-title">Dashboard</h1>
-            <p class="hero-subtitle">Manage your media content and analytics</p>
+    <div class="container">
+        <div class="dashboard-header fade-in">
+            <h2>Dashboard</h2>
+            <p>Browse our products</p>
         </div>
 
-        <div class="cards-grid">
-            <div class="card card-purple">
-                <div class="card-icon">📊</div>
-                <h3>Analytics</h3>
-                <p class="card-number">1,234</p>
-                <p class="card-label">Total Views</p>
-            </div>
-
-            <div class="card card-blue">
-                <div class="card-icon">👥</div>
-                <h3>Clients</h3>
-                <p class="card-number">567</p>
-                <p class="card-label">Active Users</p>
-            </div>
-
-            <div class="card card-pink">
-                <div class="card-icon">📁</div>
-                <h3>Products</h3>
-                <p class="card-number">89</p>
-                <p class="card-label">Total Items</p>
-            </div>
-
-            <div class="card card-orange">
-                <div class="card-icon">💰</div>
-                <h3>Revenue</h3>
-                <p class="card-number">$12,345</p>
-                <p class="card-label">This Month</p>
-            </div>
+        <div *ngIf="error" class="alert alert-error">
+            {{ error }}
         </div>
 
-        <div class="features-section">
-            <div class="feature-card">
-                <h3>Quick Actions</h3>
-                <ul class="action-list">
-                    <li class="action-item">
-                        <span class="action-icon">➕</span>
-                        <span>Add New Client</span>
-                    </li>
-                    <li class="action-item">
-                        <span class="action-icon">📄</span>
-                        <span>Create Invoice</span>
-                    </li>
-                    <li class="action-item">
-                        <span class="action-icon">📦</span>
-                        <span>Add Product</span>
-                    </li>
-                    <li class="action-item">
-                        <span class="action-icon">📈</span>
-                        <span>View Reports</span>
-                    </li>
-                </ul>
-            </div>
+        <div *ngIf="loading" class="loading-container">
+            <div class="spinner"></div>
+            <p>Loading products...</p>
+        </div>
 
-            <div class="feature-card">
-                <h3>Recent Activity</h3>
-                <ul class="activity-list">
-                    <li class="activity-item">
-                        <div class="activity-dot"></div>
-                        <div>
-                            <p class="activity-text">New client registered</p>
-                            <p class="activity-time">5 minutes ago</p>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-dot"></div>
-                        <div>
-                            <p class="activity-text">Invoice #1234 paid</p>
-                            <p class="activity-time">1 hour ago</p>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-dot"></div>
-                        <div>
-                            <p class="activity-text">Product added to catalog</p>
-                            <p class="activity-time">3 hours ago</p>
-                        </div>
-                    </li>
-                </ul>
+        <div *ngIf="!loading && products.length === 0" class="empty-state">
+            <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="40" stroke="#e2e8f0" stroke-width="4" />
+                <path d="M50 30V70M30 50H70" stroke="#cbd5e0" stroke-width="4" stroke-linecap="round" />
+            </svg>
+            <h3>No products available</h3>
+            <p>Products will appear here once they are added</p>
+        </div>
+
+        <div class="products-grid" *ngIf="!loading && products.length > 0">
+            <div class="product-card fade-in" *ngFor="let product of products" [style.animation-delay]="'0.1s'">
+                <div class="product-image">
+                    <svg width="100%" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="200" height="200" fill="#f7fafc" />
+                        <rect x="60" y="60" width="80" height="80" rx="12" fill="#e2e8f0" />
+                        <circle cx="85" cy="85" r="8" fill="#cbd5e0" />
+                        <path d="M75 110L95 90L115 110L105 120L85 100L75 110Z" fill="#cbd5e0" />
+                    </svg>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.nom }}</h3>
+                    <p class="product-description">{{ product.description || 'No description available' }}</p>
+                    <div class="product-footer">
+                        <span class="product-price">${{ product.prix.toFixed(2) }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

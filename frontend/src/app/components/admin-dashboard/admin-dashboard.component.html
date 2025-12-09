@@ -1,0 +1,230 @@
+<div class="admin-container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <h1 class="logo">MediaTech Admin</h1>
+            <div class="navbar-actions">
+                <span class="welcome">{{ username }}</span>
+                <button class="btn btn-secondary btn-sm" (click)="goToDashboard()">Dashboard</button>
+                <button class="btn btn-secondary btn-sm" (click)="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    <div class="container">
+        <div *ngIf="error" class="alert alert-error fade-in">
+            <span>{{ error }}</span>
+            <button (click)="clearMessages()" class="close-btn">&times;</button>
+        </div>
+
+        <div *ngIf="successMessage" class="alert alert-success fade-in">
+            <span>{{ successMessage }}</span>
+            <button (click)="clearMessages()" class="close-btn">&times;</button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon users-icon">👥</div>
+                <div class="stat-content">
+                    <h3>Users</h3>
+                    <p class="stat-number">{{ users.length }}</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon clients-icon">👤</div>
+                <div class="stat-content">
+                    <h3>Clients</h3>
+                    <p class="stat-number">{{ clients.length }}</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon products-icon">📦</div>
+                <div class="stat-content">
+                    <h3>Products</h3>
+                    <p class="stat-number">{{ products.length }}</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon factures-icon">📝</div>
+                <div class="stat-content">
+                    <h3>Factures</h3>
+                    <p class="stat-number">{{ factures.length }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn" [class.active]="activeTab === 'users'" (click)="switchTab('users')">
+                Users
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'clients'" (click)="switchTab('clients')">
+                Clients
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'products'" (click)="switchTab('products')">
+                Products
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'factures'" (click)="switchTab('factures')">
+                Factures
+            </button>
+        </div>
+
+        <!-- Users Tab -->
+        <div *ngIf="activeTab === 'users'" class="tab-content fade-in">
+            <div class="section-card">
+                <h2>Create New User</h2>
+                <form (ngSubmit)="createUser()" class="form-grid">
+                    <input type="text" [(ngModel)]="newUser.username" name="username" placeholder="Username" required>
+                    <input type="password" [(ngModel)]="newUser.password" name="password" placeholder="Password"
+                        required>
+                    <select [(ngModel)]="newUser.role" name="role">
+                        <option value="USER">USER</option>
+                        <option value="ADMIN">ADMIN</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Create User</button>
+                </form>
+            </div>
+
+            <div class="section-card">
+                <h2>All Users</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Roles</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of users">
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td><span class="badge">{{ user.roles.join(', ') }}</span></td>
+                                <td>
+                                    <button (click)="deleteUser(user.id!)" class="btn btn-danger btn-sm">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clients Tab -->
+        <div *ngIf="activeTab === 'clients'" class="tab-content fade-in">
+            <div class="section-card">
+                <h2>Create New Client</h2>
+                <form (ngSubmit)="createClient()" class="form-grid">
+                    <input type="text" [(ngModel)]="newClient.nom" name="nom" placeholder="Last Name" required>
+                    <input type="text" [(ngModel)]="newClient.prenom" name="prenom" placeholder="First Name" required>
+                    <input type="tel" [(ngModel)]="newClient.telephone" name="telephone" placeholder="Phone">
+                    <button type="submit" class="btn btn-primary">Create Client</button>
+                </form>
+            </div>
+
+            <div class="section-card">
+                <h2>All Clients</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let client of clients">
+                                <td>{{ client.id }}</td>
+                                <td>{{ client.nom }}</td>
+                                <td>{{ client.prenom }}</td>
+                                <td>{{ client.telephone || 'N/A' }}</td>
+                                <td>
+                                    <button (click)="deleteClient(client.id!)"
+                                        class="btn btn-danger btn-sm">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div *ngIf="activeTab === 'products'" class="tab-content fade-in">
+            <div class="section-card">
+                <h2>Create New Product</h2>
+                <form (ngSubmit)="createProduct()" class="form-grid">
+                    <input type="text" [(ngModel)]="newProduct.nom" name="nom" placeholder="Product Name" required>
+                    <input type="number" [(ngModel)]="newProduct.prix" name="prix" placeholder="Price" step="0.01"
+                        required>
+                    <input type="text" [(ngModel)]="newProduct.description" name="description"
+                        placeholder="Description">
+                    <button type="submit" class="btn btn-primary">Create Product</button>
+                </form>
+            </div>
+
+            <div class="section-card">
+                <h2>All Products</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let product of products">
+                                <td>{{ product.id }}</td>
+                                <td>{{ product.nom }}</td>
+                                <td>${{ product.prix.toFixed(2) }}</td>
+                                <td>{{ product.description || 'N/A' }}</td>
+                                <td>
+                                    <button (click)="deleteProduct(product.id!)"
+                                        class="btn btn-danger btn-sm">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Factures Tab -->
+        <div *ngIf="activeTab === 'factures'" class="tab-content fade-in">
+            <div class="section-card">
+                <h2>All Factures</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Reference</th>
+                                <th>Date</th>
+                                <th>Products</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let facture of factures">
+                                <td>{{ facture.id }}</td>
+                                <td>{{ facture.ref }}</td>
+                                <td>{{ facture.date | date:'short' }}</td>
+                                <td>{{ facture.produits?.length || 0 }} items</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

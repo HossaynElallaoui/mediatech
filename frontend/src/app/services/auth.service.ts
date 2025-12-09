@@ -10,13 +10,22 @@ export class AuthService {
     private readonly API_URL = 'http://localhost:8080/api/auth';
     private currentUserSubject = new BehaviorSubject<string | null>(this.getStoredUser());
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+        console.log('AuthService initialized');
+    }
 
     login(credentials: LoginRequest): Observable<AuthResponse> {
+        console.log('Login attempt for user:', credentials.username);
         return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials).pipe(
             tap(response => {
-                this.setToken(response.accessToken);
-                this.currentUserSubject.next(credentials.username);
+                console.log('Login response received:', response);
+                if (response && response.accessToken) {
+                    this.setToken(response.accessToken);
+                    this.currentUserSubject.next(credentials.username);
+                    console.log('Token stored successfully');
+                } else {
+                    console.error('No access token in response');
+                }
             })
         );
     }
@@ -29,14 +38,18 @@ export class AuthService {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
         this.currentUserSubject.next(null);
+        console.log('Logged out, token removed');
     }
 
     getToken(): string | null {
-        return localStorage.getItem('token');
+        const token = localStorage.getItem('token');
+        console.log('Getting token:', token ? 'Token exists' : 'No token');
+        return token;
     }
 
     private setToken(token: string): void {
         localStorage.setItem('token', token);
+        console.log('Token set in localStorage');
     }
 
     private getStoredUser(): string | null {
@@ -44,7 +57,9 @@ export class AuthService {
     }
 
     isAuthenticated(): boolean {
-        return this.getToken() !== null;
+        const hasToken = this.getToken() !== null;
+        console.log('Is authenticated:', hasToken);
+        return hasToken;
     }
 
     getCurrentUser(): Observable<string | null> {

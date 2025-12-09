@@ -25,14 +25,26 @@ export class RegisterComponent {
     ) { }
 
     onSubmit(): void {
+        this.errorMessage = '';
+        this.successMessage = '';
+
+        // Validation
+        if (!this.userData.username || !this.userData.password) {
+            this.errorMessage = 'Please fill in all fields';
+            return;
+        }
+
         if (this.userData.password !== this.confirmPassword) {
             this.errorMessage = 'Passwords do not match';
             return;
         }
 
+        if (this.userData.password.length < 6) {
+            this.errorMessage = 'Password must be at least 6 characters';
+            return;
+        }
+
         this.isLoading = true;
-        this.errorMessage = '';
-        this.successMessage = '';
 
         this.authService.register(this.userData).subscribe({
             next: (response) => {
@@ -42,7 +54,8 @@ export class RegisterComponent {
                 }, 2000);
             },
             error: (error) => {
-                this.errorMessage = error.error || 'Registration failed. Please try again.';
+                console.error('Registration error:', error);
+                this.errorMessage = error.error || 'Registration failed. Username may already exist.';
                 this.isLoading = false;
             },
             complete: () => {

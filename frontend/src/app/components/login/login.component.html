@@ -1,35 +1,45 @@
 <div class="login-container">
-    <div class="login-card">
+    <div class="login-card fade-in">
         <div class="login-header">
-            <h1>Welcome Back</h1>
-            <p>Sign in to continue to MediaTech</p>
+            <h1>MediaTech</h1>
+            <p>Sign in to your account</p>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-error">
+            <span>{{ errorMessage }}</span>
+            <button (click)="errorMessage = ''" class="close-btn">&times;</button>
         </div>
 
         <form (ngSubmit)="onSubmit()" class="login-form">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" [(ngModel)]="credentials.username"
-                    placeholder="Enter your username" required [disabled]="isLoading" />
+                    placeholder="Enter your username" [disabled]="isLoading" required autocomplete="username">
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" [(ngModel)]="credentials.password"
-                    placeholder="Enter your password" required [disabled]="isLoading" />
+                    placeholder="Enter your password" [disabled]="isLoading" required autocomplete="current-password">
             </div>
 
-            <div class="error-message" *ngIf="errorMessage">
-                {{ errorMessage }}
-            </div>
-
-            <button type="submit" class="btn-primary" [disabled]="isLoading">
+            <button type="submit" class="btn btn-primary btn-block" [disabled]="isLoading">
                 <span *ngIf="!isLoading">Sign In</span>
-                <span *ngIf="isLoading">Signing In...</span>
+                <span *ngIf="isLoading" class="loading-text">
+                    <span class="spinner-small"></span>
+                    Signing in...
+                </span>
             </button>
         </form>
 
-        <div class="register-link">
-            Don't have an account? <a routerLink="/register">Sign up</a>
+        <div class="login-footer">
+            <p>Don't have an account? <a routerLink="/register">Sign up</a></p>
+        </div>
+
+        <div class="demo-credentials">
+            <p><strong>Demo Credentials:</strong></p>
+            <p>Admin: <code>admin / admin123</code></p>
+            <p>User: <code>user / user123</code></p>
         </div>
     </div>
 </div>

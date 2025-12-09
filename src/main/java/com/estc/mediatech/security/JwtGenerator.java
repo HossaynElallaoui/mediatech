@@ -14,7 +14,10 @@ import java.util.Date;
 @Component
 public class JwtGenerator {
 
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    // Fixed secret key - DO NOT change this in production without invalidating all
+    // tokens
+    private static final String JWT_SECRET = "MediaTechSecretKeyForJWTTokenGenerationAndValidationPleaseKeepThisSafeAndSecure2024";
+    private static final Key key = Keys.hmacShaKeyFor(JWT_SECRET.getBytes());
     private static final long JWT_EXPIRATION = 7200000; // 2 hours
 
     public String generateToken(Authentication authentication) {

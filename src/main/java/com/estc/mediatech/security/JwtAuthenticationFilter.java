@@ -38,15 +38,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = getJWTFromRequest(request);
 
-        if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
-            String username = tokenGenerator.getUsernameFromJWT(token);
-            System.out.println("Valid JWT token for user: " + username);
+        if (StringUtils.hasText(token)) {
+            System.out.println("JWT token found in request for path: " + path);
+            try {
+                if (tokenGenerator.validateToken(token)) {
+                    String username = tokenGenerator.getUsernameFromJWT(token);
+                    System.out.println("Valid JWT token for user: " + username);
 
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    System.out.println("Authentication set successfully for user: " + username);
+                } else {
+                    System.out.println("JWT token validation failed");
+                }
+            } catch (Exception e) {
+                System.out.println("Error processing JWT token: " + e.getMessage());
+            }
+        } else {
+            System.out.println("No JWT token found in request for path: " + path);
         }
 
         filterChain.doFilter(request, response);
